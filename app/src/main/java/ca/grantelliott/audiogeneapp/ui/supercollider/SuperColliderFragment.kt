@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ca.grantelliott.audiogeneapp.R
 
 class SuperColliderFragment : Fragment() {
@@ -20,7 +20,7 @@ class SuperColliderFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         superColliderViewModel =
-                ViewModelProviders.of(this).get(SuperColliderViewModel::class.java)
+                ViewModelProvider(this).get(SuperColliderViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_supercollider, container, false)
         val textView: TextView = root.findViewById(R.id.text_supercollider)
         superColliderViewModel.text.observe(viewLifecycleOwner, Observer {

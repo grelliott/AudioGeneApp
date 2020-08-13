@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ca.grantelliott.audiogeneapp.R
 
 class GeneticsFragment : Fragment() {
@@ -20,7 +20,7 @@ class GeneticsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         geneticsViewModel =
-                ViewModelProviders.of(this).get(GeneticsViewModel::class.java)
+                ViewModelProvider(this).get(GeneticsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_genetics, container, false)
         val textView: TextView = root.findViewById(R.id.text_genetics)
         geneticsViewModel.text.observe(viewLifecycleOwner, Observer {
