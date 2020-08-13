@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AudioGene App</string>
+    <string name="app_name">AudioGene</string>
     <string name="title_home">Home</string>
     <string name="title_genetics">Genetics</string>
     <string name="title_supercollider">SuperCollider</string>
