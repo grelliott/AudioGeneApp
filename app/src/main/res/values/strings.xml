@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_genetics">Genetics</string>
     <string name="title_supercollider">SuperCollider</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="status_unknown">Unknown</string>
 </resources>

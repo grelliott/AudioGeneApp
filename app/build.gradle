@@ -43,6 +43,17 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.dagger:dagger:2.28.3'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
+    implementation 'com.tinder.scarlet:scarlet:0.1.10'
+    implementation "com.tinder.scarlet:websocket-okhttp:0.1.10"
+    implementation "com.tinder.scarlet:stream-adapter-rxjava2:0.1.10"
+//    implementation "com.tinder.scarlet:message-adapter-moshi:0.1.10"
+    implementation "com.tinder.scarlet:lifecycle-android:0.1.10"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
