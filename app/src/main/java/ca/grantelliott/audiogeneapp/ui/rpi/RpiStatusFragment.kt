@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ca.grantelliott.audiogeneapp.R
 import ca.grantelliott.audiogeneapp.factories.ViewModelFactory
-import ca.grantelliott.audiogeneapp.data.repository.RpiStatusRepository
+import ca.grantelliott.audiogeneapp.data.rpi.repository.RpiStatusRepository
 
 class RpiStatusFragment : Fragment() {
 

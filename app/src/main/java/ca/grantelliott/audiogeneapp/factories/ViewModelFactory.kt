@@ -2,7 +2,7 @@ package ca.grantelliott.audiogeneapp.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ca.grantelliott.audiogeneapp.data.repository.RpiStatusRepository
+import ca.grantelliott.audiogeneapp.data.rpi.repository.RpiStatusRepository
 import ca.grantelliott.audiogeneapp.ui.rpi.RpiStatusViewModel
 import java.lang.IllegalArgumentException
 import javax.inject.Inject

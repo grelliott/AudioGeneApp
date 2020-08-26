@@ -1,4 +1,4 @@
-package ca.grantelliott.audiogeneapp.data.api
+package ca.grantelliott.audiogeneapp.data.rpi.api
 
 /**
  * Build this out to store data sent from the websocket connection
@@ -7,8 +7,7 @@ package ca.grantelliott.audiogeneapp.data.api
  * as well as the generation
  * It may also contain other values such as system temp, CPU, memory, etc
  */
-data class RpiStatus (
-    var status: String
-//    ,
-//    var cpu: Int /* CPU usage */
+data class Status (
+    var status: String,
+    var cpuStatus: Integer
 )
