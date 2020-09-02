@@ -7,7 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import ca.grantelliott.audiogeneapp.R
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import java.text.DecimalFormat
 
 class RpiStatusFragment : Fragment() {
     private val viewModel: RpiStatusViewModel by viewModels()
@@ -20,11 +25,18 @@ class RpiStatusFragment : Fragment() {
        return inflater.inflate(R.layout.rpi_status_fragment, container, false)
     }
 
+    @FlowPreview
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val rpiStatusTextView: TextView = view.findViewById<TextView>(R.id.text_rpi_status)
-        viewModel.status.observe(viewLifecycleOwner, {
-            rpiStatusTextView.text = it.status
-        })
+        val rpiStatusTextView: TextView = view.findViewById(R.id.text_rpi_status)
+        val rpiCpuUSageTextView: TextView = view.findViewById(R.id.text_rpi_cpu_usage)
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.getStatus().collect {
+                rpiStatusTextView.text = it.status
+                rpiCpuUSageTextView.text = DecimalFormat("0.0").format(it.cpuUsage)
+            }
+        }
     }
 }

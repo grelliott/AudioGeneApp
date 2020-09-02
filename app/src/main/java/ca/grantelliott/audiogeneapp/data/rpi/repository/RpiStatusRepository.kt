@@ -2,53 +2,34 @@ package ca.grantelliott.audiogeneapp.data.rpi.repository
 
 import android.util.Log
 import ca.grantelliott.audiogeneapp.data.rpi.api.Status
-import ca.grantelliott.audiogeneapp.data.rpi.api.Subscribe
-import ca.grantelliott.audiogeneapp.data.rpi.api.Webservice
-import com.tinder.scarlet.Scarlet
-import com.tinder.scarlet.WebSocket
-import com.tinder.scarlet.messageadapter.gson.GsonMessageAdapter
-import com.tinder.scarlet.streamadapter.rxjava2.RxJava2StreamAdapterFactory
-import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
-import io.reactivex.Flowable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import ca.grantelliott.audiogeneapp.data.rpi.connection.RpiWebSocketListener
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RpiStatusRepository @Inject constructor() {
-    private val disposables = CompositeDisposable()
-
     private val rpiUrl: String = "ws://192.168.1.29:5000/status"
+
     //TODO move to DI component class
-    private val webservice: Webservice = Scarlet.Builder()
-        .webSocketFactory(OkHttpClient().newWebSocketFactory(rpiUrl))
-        .addMessageAdapterFactory(GsonMessageAdapter.Factory())
-        .addStreamAdapterFactory(RxJava2StreamAdapterFactory())
+    private val request: Request = Request.Builder()
+        .url(rpiUrl)
         .build()
-        .create<Webservice>()
+    private val httpClient: OkHttpClient = OkHttpClient.Builder()
+        .readTimeout(0,TimeUnit.SECONDS)
+        .connectTimeout(0, TimeUnit.SECONDS)
+        .build()
 
-    init {
-        Log.d("TEST", "Init repository")
-        disposables.add(webservice.observeWebSocketEvent()
-            .subscribeOn(Schedulers.io())
-            .filter { it is WebSocket.Event.OnConnectionOpened<*> }
-            .subscribe(
-                {
-                //TODO update status to CONNECTED
-                Log.d("TEST", "Connection opened")
-                webservice.sendSubscribe(Subscribe())
-                },
-                { e ->
-                    Log.e("TEST", "Error: ${e.message}")
-                })
-        )
-    }
+    private val wsListener: RpiWebSocketListener = RpiWebSocketListener()
+    private val webSocket = httpClient.newWebSocket(request, wsListener)
 
-    fun observeStatus(): Flowable<Status> {
-        return webservice.observeStatus()
-    }
-
-    fun onCleared() {
-        disposables.clear()
+    @ExperimentalCoroutinesApi
+    fun observeStatus(): StateFlow<Status> {
+        Log.d("TEST", "+observeStatus")
+        return wsListener.observeStatus()
     }
 }

@@ -7,7 +7,7 @@ package ca.grantelliott.audiogeneapp.data.rpi.api
  * as well as the generation
  * It may also contain other values such as system temp, CPU, memory, etc
  */
-data class Status (
+data class Status(
     var status: String,
-    var cpuStatus: Integer
+    var cpuUsage: Float
 )
