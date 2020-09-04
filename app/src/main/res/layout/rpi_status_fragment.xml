@@ -7,19 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.rpi.RpiStatusFragment">
 
-    <TextView
-        android:id="@+id/text_rpi_cpu_usage"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+    <ca.grantelliott.audiogeneapp.ui.components.GaugeComponent
+        android:id="@+id/rpi_cpu_freq_gauge"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="@string/_0" />
+        app:minValue="0"
+        app:maxValue="100"
+        app:warnValue="60"
+        app:criticalValue="85"
+        app:value="0"
+        app:thickness="5dp"
+        />
 
     <TextView
         android:id="@+id/text_rpi_status"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@id/text_rpi_cpu_usage"
+        app:layout_constraintTop_toBottomOf="@id/rpi_cpu_freq_gauge"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@string/status_unknown" />
 

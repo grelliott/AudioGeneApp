@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import ca.grantelliott.audiogeneapp.R
+import ca.grantelliott.audiogeneapp.ui.components.GaugeComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import timber.log.Timber
@@ -31,13 +32,13 @@ class RpiStatusFragment : Fragment() {
         Timber.d("+onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val rpiStatusTextView: TextView = view.findViewById(R.id.text_rpi_status)
-        val rpiCpuUSageTextView: TextView = view.findViewById(R.id.text_rpi_cpu_usage)
+        val rpiCpuGaugeView: GaugeComponent = view.findViewById(R.id.rpi_cpu_freq_gauge)
 
         lifecycleScope.launchWhenCreated {
-            viewModel.getStatus().collect {
-                rpiStatusTextView.text = it.status
-                rpiCpuUSageTextView.text = DecimalFormat("0.0").format(it.cpuUsage)
-            }
+            viewModel.status().observe(viewLifecycleOwner, {
+                rpiStatusTextView.text = it.connectionStatus
+                rpiCpuGaugeView.value = it.cpuUsage ?: 0f
+            })
         }
     }
 

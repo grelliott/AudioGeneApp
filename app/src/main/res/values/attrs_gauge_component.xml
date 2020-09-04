@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="GaugeComponent">
+        <attr name="minValue" format="float"/>
+        <attr name="maxValue" format="float" />
+        <attr name="value" format="float" />
+        <attr name="warnValue" format="float" />
+        <attr name="criticalValue" format="float" />
+        <attr name="goodColor" format="color" />
+        <attr name="warnColor" format="color" />
+        <attr name="criticalColor" format="color" />
+        <attr name="thickness" format="dimension" />
+    </declare-styleable>
+</resources>
