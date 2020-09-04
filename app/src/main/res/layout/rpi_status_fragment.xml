@@ -71,14 +71,4 @@
         app:warnColor="@color/colorGaugeWarn"
         app:warnValue="70" />
 
-    <!-- Replace with status LEDs for connection and services -->
-    <TextView
-        android:id="@+id/text_rpi_status"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/status_unknown"
-        android:background="#00000000"
-        android:translationZ="2dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+ </androidx.constraintlayout.widget.ConstraintLayout>
