@@ -25,7 +25,6 @@
         app:maxValue="100"
         app:minValue="0"
         app:thickness="@dimen/gauge_thickness"
-        app:value="0"
         app:warnColor="@color/colorGaugeWarn"
         app:warnValue="60" />
 
@@ -47,7 +46,6 @@
         app:maxValue="100"
         app:minValue="0"
         app:thickness="@dimen/gauge_thickness"
-        app:value="0"
         app:warnColor="@color/colorGaugeWarn"
         app:warnValue="60" />
 
@@ -69,10 +67,10 @@
         app:maxValue="90"
         app:minValue="25"
         app:thickness="@dimen/gauge_thickness"
-        app:value="0"
         app:warnColor="@color/colorGaugeWarn"
         app:warnValue="70" />
 
+    <!-- Replace with status LEDs for connection and services -->
     <TextView
         android:id="@+id/text_rpi_status"
         android:layout_width="match_parent"

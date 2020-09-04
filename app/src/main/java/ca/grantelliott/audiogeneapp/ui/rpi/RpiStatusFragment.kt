@@ -39,9 +39,9 @@ class RpiStatusFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             viewModel.status().observe(viewLifecycleOwner, {
                 rpiStatusTextView.text = it.connectionStatus
-                rpiCpuGaugeView.value = it.cpuUsage ?: 0f
-                rpiMemGaugeView.value = it.memUsage ?: 0f
-                rpiCpuTempView.value = it.cpuTemp ?: 0f
+                rpiCpuGaugeView.value = it.cpuUsage
+                rpiMemGaugeView.value = it.memUsage
+                rpiCpuTempView.value = it.cpuTemp
             })
         }
     }

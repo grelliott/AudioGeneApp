@@ -9,7 +9,7 @@ import ca.grantelliott.audiogeneapp.R
 import kotlin.math.PI
 
 class GaugeComponent : View {
-    private var _value: Float = 0f
+    private var _value: Float? = null
     private var _minValue: Float = 0f
     private var _maxValue: Float = 1.0f
     private var _warnValue: Float = 0f
@@ -30,7 +30,7 @@ class GaugeComponent : View {
     private var _paint: Paint = Paint()
     private var _textPaint: TextPaint = TextPaint()
 
-    var value: Float
+    var value: Float?
         get() = _value
         set(value) {
             _value = value
@@ -126,7 +126,9 @@ class GaugeComponent : View {
             attrs, R.styleable.GaugeComponent, defStyle, 0
         ).apply {
             try {
-                _value = getFloat(R.styleable.GaugeComponent_value, value)
+                if (hasValue(R.styleable.GaugeComponent_value)) {
+                    _value = getFloat(R.styleable.GaugeComponent_value, 0f)
+                }
                 _minValue = getFloat(R.styleable.GaugeComponent_minValue, minValue)
                 _maxValue = getFloat(R.styleable.GaugeComponent_maxValue, maxValue)
                 _warnValue = getFloat(R.styleable.GaugeComponent_warnValue, warnValue)
@@ -179,15 +181,19 @@ class GaugeComponent : View {
     }
 
     private fun determineStrokeColor() {
-        _color = when {
-            (criticalValue > minValue && value >= criticalValue) -> criticalColor
-            (warnValue > minValue && value >= warnValue) -> warnColor
-            else -> goodColor
+        if (value != null) {
+            _color = when {
+                (criticalValue > minValue && value!! >= criticalValue) -> criticalColor
+                (warnValue > minValue && value!! >= warnValue) -> warnColor
+                else -> goodColor
+            }
         }
     }
 
     private fun calculateSweepAngle() {
-        _sweepAngle = (value - _minValue) / (_maxValue - _minValue) * 180
+        if (value != null) {
+            _sweepAngle = (value!! - _minValue) / (_maxValue - _minValue) * 180
+        }
     }
 
     private fun convertRadsToDegrees(rad: Float): Float {
@@ -201,7 +207,7 @@ class GaugeComponent : View {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         val padding = _paint.strokeWidth
-        val size = (if (width < height) width else height) - (2*padding)
+        val size = (if (width < height) width else height) - (2 * padding)
         val radius = size / 2
 
         val rectLeft = (width - (2 * padding)) / 2 - radius + padding
@@ -209,8 +215,11 @@ class GaugeComponent : View {
         val rectRight = rectLeft + size
         val rectBottom = rectTop + size
         _oval.set(rectLeft, rectTop, rectRight, rectBottom)
-        _path.addArc(_oval, _startAngle, _sweepAngle)
-        canvas?.drawPath(_path, _paint)
+
+        if (value != null) {
+            _path.addArc(_oval, _startAngle, _sweepAngle)
+            canvas?.drawPath(_path, _paint)
+        }
 
         if (_label != null) {
             canvas?.drawText(_label!!, (rectLeft + size / 2), (rectTop + size / 2), _textPaint)
