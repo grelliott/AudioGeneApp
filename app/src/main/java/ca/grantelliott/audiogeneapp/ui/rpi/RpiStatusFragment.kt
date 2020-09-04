@@ -32,12 +32,16 @@ class RpiStatusFragment : Fragment() {
         Timber.d("+onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val rpiStatusTextView: TextView = view.findViewById(R.id.text_rpi_status)
-        val rpiCpuGaugeView: GaugeComponent = view.findViewById(R.id.rpi_cpu_freq_gauge)
+        val rpiCpuGaugeView: GaugeComponent = view.findViewById(R.id.rpi_cpu_usage_gauge)
+        val rpiMemGaugeView: GaugeComponent = view.findViewById(R.id.rpi_mem_usage_gauge)
+        val rpiCpuTempView: GaugeComponent = view.findViewById(R.id.rpi_cpu_temp_gauge)
 
         lifecycleScope.launchWhenCreated {
             viewModel.status().observe(viewLifecycleOwner, {
                 rpiStatusTextView.text = it.connectionStatus
                 rpiCpuGaugeView.value = it.cpuUsage ?: 0f
+                rpiMemGaugeView.value = it.memUsage ?: 0f
+                rpiCpuTempView.value = it.cpuTemp ?: 0f
             })
         }
     }

@@ -98,59 +98,32 @@ class GaugeComponent : View {
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
         // Load attributes
-        val a = context.obtainStyledAttributes(
+        context.theme.obtainStyledAttributes(
             attrs, R.styleable.GaugeComponent, defStyle, 0
-        )
-
-        _value = a.getFloat(
-            R.styleable.GaugeComponent_value,
-            value
-        )
-        _minValue = a.getFloat(
-            R.styleable.GaugeComponent_minValue,
-            minValue
-        )
-        _maxValue = a.getFloat(
-            R.styleable.GaugeComponent_maxValue,
-            maxValue
-        )
-        _warnValue = a.getFloat(
-            R.styleable.GaugeComponent_warnValue,
-            warnValue
-        )
-        _criticalValue = a.getFloat(
-            R.styleable.GaugeComponent_criticalValue,
-            criticalValue
-        )
-        _goodColor = a.getColor(
-            R.styleable.GaugeComponent_goodColor,
-            goodColor
-        )
-        _warnColor = a.getColor(
-            R.styleable.GaugeComponent_warnColor,
-            warnColor
-        )
-        _criticalColor = a.getColor(
-            R.styleable.GaugeComponent_criticalColor,
-            criticalColor
-        )
-        _thickness = a.getDimension(
-            R.styleable.GaugeComponent_thickness,
-            thickness
-        )
-
-        a.recycle()
-
+        ).apply {
+            try {
+                _value = getFloat(R.styleable.GaugeComponent_value, value)
+                _minValue = getFloat(R.styleable.GaugeComponent_minValue, minValue)
+                _maxValue = getFloat(R.styleable.GaugeComponent_maxValue, maxValue)
+                _warnValue = getFloat(R.styleable.GaugeComponent_warnValue, warnValue)
+                _criticalValue = getFloat(R.styleable.GaugeComponent_criticalValue, criticalValue)
+                _goodColor = getColor(R.styleable.GaugeComponent_goodColor, goodColor)
+                _warnColor = getColor(R.styleable.GaugeComponent_warnColor, warnColor)
+                _criticalColor = getColor(R.styleable.GaugeComponent_criticalColor, criticalColor)
+                _thickness = getDimension(R.styleable.GaugeComponent_thickness, thickness)
+            } finally {
+                recycle()
+            }
+        }
         // Set up drawing objects
         _paint = Paint().apply {
             strokeWidth = thickness
             color = goodColor
             isAntiAlias = true
-            strokeCap = Paint.Cap.ROUND
+            strokeCap = Paint.Cap.SQUARE
             style = Paint.Style.STROKE
         }
 
-        // Calculate dimensions and colours needed to draw
         invalidatePaintAndMeasurements()
     }
 
@@ -164,18 +137,19 @@ class GaugeComponent : View {
             it.color = _color
         }
         invalidate()
+        requestLayout()
     }
 
     private fun determineStrokeColor() {
         _color = when {
-            (criticalValue > minValue && value > criticalValue) -> criticalColor
-            (warnValue > minValue && value > warnValue) -> warnColor
+            (criticalValue > minValue && value >= criticalValue) -> criticalColor
+            (warnValue > minValue && value >= warnValue) -> warnColor
             else -> goodColor
         }
     }
 
     private fun calculateSweepAngle() {
-        _sweepAngle = 180 * (value / (maxValue - minValue))
+        _sweepAngle = (value - _minValue) / (_maxValue - _minValue) * 180
     }
 
     private fun convertRadsToDegrees(rad: Float): Float {
