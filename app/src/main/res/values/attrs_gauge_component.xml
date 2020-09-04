@@ -9,5 +9,8 @@
         <attr name="warnColor" format="color" />
         <attr name="criticalColor" format="color" />
         <attr name="thickness" format="dimension" />
+        <attr name="label" format="string" />
+        <attr name="labelSize" format="dimension" />
+        <attr name="labelForeground" format="color" />
     </declare-styleable>
 </resources>

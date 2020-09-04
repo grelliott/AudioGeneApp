@@ -2,6 +2,7 @@ package ca.grantelliott.audiogeneapp.ui.components
 
 import android.content.Context
 import android.graphics.*
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import ca.grantelliott.audiogeneapp.R
@@ -17,6 +18,9 @@ class GaugeComponent : View {
     private var _goodColor: Int = Color.GREEN
     private var _warnColor: Int = Color.rgb(255, 191, 0)  // Amber
     private var _criticalColor: Int = Color.RED
+    private var _label: String? = null
+    private var _labelSize: Float = 0f
+    private var _labelForeground: Int = Color.BLACK
 
     private var _oval: RectF = RectF()
     private var _startAngle: Float = 0f
@@ -24,6 +28,7 @@ class GaugeComponent : View {
     private var _color: Int = _goodColor
     private val _path: Path = Path()
     private var _paint: Paint = Paint()
+    private var _textPaint: TextPaint = TextPaint()
 
     var value: Float
         get() = _value
@@ -31,54 +36,73 @@ class GaugeComponent : View {
             _value = value
             invalidatePaintAndMeasurements()
         }
-    private var minValue: Float
+    var minValue: Float
         get() = _minValue
         set(minValue) {
             _minValue = minValue
             invalidatePaintAndMeasurements()
         }
-    private var maxValue: Float
+    var maxValue: Float
         get() = _maxValue
         set(maxValue) {
             _maxValue = maxValue
             invalidatePaintAndMeasurements()
         }
-    private var warnValue: Float
+    var warnValue: Float
         get() = _warnValue
         set(warnValue) {
             _warnValue = warnValue
             invalidatePaintAndMeasurements()
         }
-    private var criticalValue: Float
+    var criticalValue: Float
         get() = _criticalValue
         set(criticalValue) {
             _criticalValue = criticalValue
             invalidatePaintAndMeasurements()
         }
-    private var goodColor: Int
+    var goodColor: Int
         get() = _goodColor
         set(goodColor) {
             _goodColor = goodColor
             invalidatePaintAndMeasurements()
         }
-    private var warnColor: Int
+    var warnColor: Int
         get() = _warnColor
         set(warnColor) {
             _warnColor = warnColor
             invalidatePaintAndMeasurements()
         }
-    private var criticalColor: Int
+    var criticalColor: Int
         get() = _criticalColor
         set(criticalColor) {
             _criticalColor = criticalColor
             invalidatePaintAndMeasurements()
         }
-    private var thickness: Float
+    var thickness: Float
         get() = _thickness
         set(thickness) {
             _thickness = thickness
             invalidatePaintAndMeasurements()
         }
+    var label: String?
+        get() = _label
+        set(label) {
+            _label = label
+            invalidatePaintAndMeasurements()
+        }
+    var labelSize: Float
+        get() = _labelSize
+        set(labelSize) {
+            _labelSize = labelSize
+            invalidatePaintAndMeasurements()
+        }
+    var labelForeground: Int
+        get() = _labelForeground
+        set(labelForeground) {
+            _labelForeground = labelForeground
+            invalidatePaintAndMeasurements()
+        }
+
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -111,6 +135,9 @@ class GaugeComponent : View {
                 _warnColor = getColor(R.styleable.GaugeComponent_warnColor, warnColor)
                 _criticalColor = getColor(R.styleable.GaugeComponent_criticalColor, criticalColor)
                 _thickness = getDimension(R.styleable.GaugeComponent_thickness, thickness)
+                _label = getString(R.styleable.GaugeComponent_label)
+                _labelSize = getDimension(R.styleable.GaugeComponent_labelSize, labelSize)
+                _labelForeground = getColor(R.styleable.GaugeComponent_labelForeground, labelForeground)
             } finally {
                 recycle()
             }
@@ -124,6 +151,12 @@ class GaugeComponent : View {
             style = Paint.Style.STROKE
         }
 
+        _textPaint = TextPaint().apply {
+            textAlign = Paint.Align.CENTER
+            color = _labelForeground
+            textSize = _labelSize
+        }
+
         invalidatePaintAndMeasurements()
     }
 
@@ -133,9 +166,14 @@ class GaugeComponent : View {
         determineStrokeColor()
 
         _path.reset()
-        _paint?.let {
+        _paint.let {
             it.color = _color
         }
+        _textPaint.let {
+            it.color = _labelForeground
+            it.textSize = _labelSize
+        }
+
         invalidate()
         requestLayout()
     }
@@ -173,5 +211,9 @@ class GaugeComponent : View {
         _oval.set(rectLeft, rectTop, rectRight, rectBottom)
         _path.addArc(_oval, _startAngle, _sweepAngle)
         canvas?.drawPath(_path, _paint)
+
+        if (_label != null) {
+            canvas?.drawText(_label!!, (rectLeft + size / 2), (rectTop + size / 2), _textPaint)
+        }
     }
 }
