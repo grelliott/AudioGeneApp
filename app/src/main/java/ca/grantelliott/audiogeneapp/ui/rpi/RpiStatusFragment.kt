@@ -11,8 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import ca.grantelliott.audiogeneapp.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import java.text.DecimalFormat
+import timber.log.Timber
 
 class RpiStatusFragment : Fragment() {
     private val viewModel: RpiStatusViewModel by viewModels()
@@ -22,12 +21,14 @@ class RpiStatusFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-       return inflater.inflate(R.layout.rpi_status_fragment, container, false)
+        Timber.d("+onCreateView")
+        return inflater.inflate(R.layout.rpi_status_fragment, container, false)
     }
 
     @FlowPreview
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.d("+onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val rpiStatusTextView: TextView = view.findViewById(R.id.text_rpi_status)
         val rpiCpuUSageTextView: TextView = view.findViewById(R.id.text_rpi_cpu_usage)
@@ -38,5 +39,10 @@ class RpiStatusFragment : Fragment() {
                 rpiCpuUSageTextView.text = DecimalFormat("0.0").format(it.cpuUsage)
             }
         }
+    }
+
+    override fun onDestroy() {
+        Timber.d("+onDestroy")
+        super.onDestroy()
     }
 }

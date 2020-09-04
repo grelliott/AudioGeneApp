@@ -7,7 +7,21 @@ package ca.grantelliott.audiogeneapp.data.rpi.api
  * as well as the generation
  * It may also contain other values such as system temp, CPU, memory, etc
  */
-data class Status(
-    var status: String,
-    var cpuUsage: Float
+
+data class SystemStatus (
+    var audiogene: String,
+    var scsynth: String
 )
+
+data class Status(
+    var connectionStatus: String,
+    var systemStatus: SystemStatus?,
+    var cpuUsage: Float?,
+    var memUsage: Float?
+)
+
+val DISCONNECTED_STATUS = Status("Disconnected", null, null, null)
+val CONNECTED_STATUS = Status("Connected", null, null, null)
+val CLOSING_STATUS = Status("Closing", null, null, null)
+val CLOSED_STATUS = Status("Closed", null, null, null)
+val CONNECTION_FAILURE_STATUS = Status("Failure", null, null, null)

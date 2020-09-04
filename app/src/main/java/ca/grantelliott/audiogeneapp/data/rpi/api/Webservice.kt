@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface Webservice {
     @ExperimentalCoroutinesApi
-    fun observeStatus(): StateFlow<Status>
+    suspend fun observeStatus(): StateFlow<Status>
     //TODO add in other send/receives for future interactions with server
 }
