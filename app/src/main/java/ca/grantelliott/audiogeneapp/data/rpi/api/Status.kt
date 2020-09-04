@@ -14,14 +14,6 @@ import java.lang.reflect.Type
  * It may also contain other values such as system temp, CPU, memory, etc
  */
 
-enum class ConnectionState {
-    DISCONNECTED,
-    CONNECTED,
-    CLOSING,
-    CLOSED,
-    FAILURE
-}
-
 enum class RunningState {
     NOT_RUNNING,
     RUNNING,
@@ -34,7 +26,6 @@ data class SystemStatus (
 )
 
 data class Status(
-    var connectionStatus: ConnectionState,
     var systemStatus: SystemStatus?,
     var cpuUsage: Float?,
     var memUsage: Float?,
@@ -48,7 +39,6 @@ class StatusDeserializer: JsonDeserializer<Status> {
         context: JsonDeserializationContext?
     ): Status {
         json as JsonObject
-        val connectionStatus = ConnectionState.CONNECTED
 
         val audiogeneStatus = when(json.get("systemStatus").asJsonObject.get("audiogene").asString) {
             "Running" -> RunningState.RUNNING
@@ -66,12 +56,8 @@ class StatusDeserializer: JsonDeserializer<Status> {
         val memUsage = json.get("memUsage").asFloat
         val cpuTemp = json.get("cpuTemp").asFloat
 
-        return Status(connectionStatus, systemStatus, cpuUsage, memUsage, cpuTemp)
+        return Status(systemStatus, cpuUsage, memUsage, cpuTemp)
     }
 }
 
-val DISCONNECTED_STATUS = Status(ConnectionState.DISCONNECTED, null, null, null, null)
-val CONNECTED_STATUS = Status(ConnectionState.CONNECTED, null, null, null, null)
-val CLOSING_STATUS = Status(ConnectionState.CLOSING, null, null, null, null)
-val CLOSED_STATUS = Status(ConnectionState.CLOSED, null, null, null, null)
-val CONNECTION_FAILURE_STATUS = Status(ConnectionState.FAILURE, null, null, null, null)
+val UNKNOWN_STATUS = Status(null, null, null, null)

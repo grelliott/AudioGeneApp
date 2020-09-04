@@ -11,13 +11,17 @@ import timber.log.Timber
 
 class RpiWebSocketListener : WebSocketListener(), Webservice {
     @ExperimentalCoroutinesApi
-    private val statusStream = MutableStateFlow(DISCONNECTED_STATUS)
+    private val statusStream = MutableStateFlow(UNKNOWN_STATUS)
+
+    @ExperimentalCoroutinesApi
+    private val connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
+
     private var gson = GsonBuilder().registerTypeAdapter(Status::class.java, StatusDeserializer()).create()
 
     @ExperimentalCoroutinesApi
     override fun onOpen(webSocket: okhttp3.WebSocket, response: Response) {
         Timber.d("Socket opened")
-        statusStream.value = CONNECTED_STATUS
+        connectionState.value = ConnectionState.CONNECTED
     }
 
     @ExperimentalCoroutinesApi
@@ -29,24 +33,30 @@ class RpiWebSocketListener : WebSocketListener(), Webservice {
     @ExperimentalCoroutinesApi
     override fun onClosing(webSocket: okhttp3.WebSocket, code: Int, reason: String) {
         Timber.d("Socket closing: $reason")
-        statusStream.value = CLOSING_STATUS
+        connectionState.value = ConnectionState.CLOSING
     }
 
     @ExperimentalCoroutinesApi
     override fun onClosed(webSocket: okhttp3.WebSocket, code: Int, reason: String) {
         Timber.d("Socket closed: $reason")
-        statusStream.value = CLOSED_STATUS
+        connectionState.value = ConnectionState.CLOSED
     }
 
     @ExperimentalCoroutinesApi
     override fun onFailure(webSocket: okhttp3.WebSocket, t: Throwable, response: Response?) {
         Timber.d("Socket failure: ${t.message}")
-        statusStream.value = CONNECTION_FAILURE_STATUS
+        connectionState.value = ConnectionState.FAILURE
     }
 
     @ExperimentalCoroutinesApi
     override suspend fun observeStatus(): StateFlow<Status> {
         Timber.d("+observeStatus")
         return statusStream
+    }
+
+    @ExperimentalCoroutinesApi
+    fun observeConnectionState(): StateFlow<ConnectionState> {
+        Timber.d("+observeConnectionState")
+        return connectionState
     }
 }

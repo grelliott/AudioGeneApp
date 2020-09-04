@@ -1,5 +1,6 @@
 package ca.grantelliott.audiogeneapp.data.rpi.repository
 
+import ca.grantelliott.audiogeneapp.data.rpi.api.ConnectionState
 import ca.grantelliott.audiogeneapp.data.rpi.api.Status
 import ca.grantelliott.audiogeneapp.data.rpi.connection.RpiWebSocketListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,6 +24,10 @@ class RpiStatusRepository @Inject constructor() {
     suspend fun observeStatus(): StateFlow<Status> {
         Timber.d("+observeStatus")
         return wsListener.observeStatus()
+    }
+    @ExperimentalCoroutinesApi
+    fun observeConnectionStatus() :StateFlow<ConnectionState> {
+        return wsListener.observeConnectionState()
     }
 
     fun connect() {
