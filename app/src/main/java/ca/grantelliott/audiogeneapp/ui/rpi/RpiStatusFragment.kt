@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import ca.grantelliott.audiogeneapp.R
+import ca.grantelliott.audiogeneapp.data.rpi.api.ConnectionState
+import ca.grantelliott.audiogeneapp.data.rpi.api.RunningState
 import ca.grantelliott.audiogeneapp.ui.components.GaugeComponent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,25 +34,29 @@ class RpiStatusFragment : Fragment() {
         Timber.d("+onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         val navItem = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        val homeBadge = navItem?.getOrCreateBadge(R.id.navigation_home)
+        val geneticsBadge = navItem?.getOrCreateBadge(R.id.navigation_genetics)
+        val supercolliderBadge = navItem?.getOrCreateBadge(R.id.navigation_supercollider)
+
         val rpiCpuGaugeView: GaugeComponent = view.findViewById(R.id.rpi_cpu_usage_gauge)
         val rpiMemGaugeView: GaugeComponent = view.findViewById(R.id.rpi_mem_usage_gauge)
         val rpiCpuTempView: GaugeComponent = view.findViewById(R.id.rpi_cpu_temp_gauge)
 
         lifecycleScope.launchWhenCreated {
             viewModel.status().observe(viewLifecycleOwner, {
-                navItem?.getOrCreateBadge(R.id.navigation_home)?.backgroundColor = when (it.connectionStatus) {
-                    "Connected" -> activity?.getColor(R.color.colorGaugeGood)!!
+                homeBadge?.backgroundColor = when (it.connectionStatus) {
+                    ConnectionState.CONNECTED -> activity?.getColor(R.color.colorGaugeGood)!!
                     else -> activity?.getColor(R.color.colorGaugeCritical)!!
                 }
                 if (it.systemStatus != null) {
-                    navItem?.getOrCreateBadge(R.id.navigation_genetics)?.backgroundColor =
+                    geneticsBadge?.backgroundColor =
                         when (it.systemStatus?.audiogene) {
-                            "Running" -> activity?.getColor(R.color.colorGaugeGood)!!
+                            RunningState.RUNNING -> activity?.getColor(R.color.colorGaugeGood)!!
                             else -> activity?.getColor(R.color.colorGaugeCritical)!!
                         }
-                    navItem?.getOrCreateBadge(R.id.navigation_supercollider)?.backgroundColor =
+                    supercolliderBadge?.backgroundColor =
                         when (it.systemStatus?.scsynth) {
-                            "Running" -> activity?.getColor(R.color.colorGaugeGood)!!
+                            RunningState.RUNNING -> activity?.getColor(R.color.colorGaugeGood)!!
                             else -> activity?.getColor(R.color.colorGaugeCritical)!!
                         }
                 } else {

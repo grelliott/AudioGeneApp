@@ -1,7 +1,7 @@
 package ca.grantelliott.audiogeneapp.data.rpi.connection
 
 import ca.grantelliott.audiogeneapp.data.rpi.api.*
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import timber.log.Timber
 class RpiWebSocketListener : WebSocketListener(), Webservice {
     @ExperimentalCoroutinesApi
     private val statusStream = MutableStateFlow(DISCONNECTED_STATUS)
-    private var gson = Gson()
+    private var gson = GsonBuilder().registerTypeAdapter(Status::class.java, StatusDeserializer()).create()
 
     @ExperimentalCoroutinesApi
     override fun onOpen(webSocket: okhttp3.WebSocket, response: Response) {
