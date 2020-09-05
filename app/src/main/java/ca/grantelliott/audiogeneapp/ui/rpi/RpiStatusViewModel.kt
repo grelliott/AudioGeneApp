@@ -11,7 +11,9 @@ import timber.log.Timber
 import java.sql.Connection
 
 class RpiStatusViewModel: ViewModel() {
-    private val rpiStatusRepository: RpiStatusRepository = RpiStatusRepository()
+    //TODO get context or sharedPrefs injected and use that to construct repository with
+    // URI from settings
+    private var rpiStatusRepository: RpiStatusRepository = RpiStatusRepository()
 
     @ExperimentalCoroutinesApi
     private val _status: LiveData<Status> = liveData {
@@ -26,10 +28,15 @@ class RpiStatusViewModel: ViewModel() {
         }
     }
 
-    init {
-        viewModelScope.launch {
-            rpiStatusRepository.connect()
-        }
+//    init {
+//        viewModelScope.launch {
+//            rpiStatusRepository.connect()
+//        }
+//    }
+
+    fun updateDataSource(url: String) {
+//        rpiStatusRepository.disconnect()
+        rpiStatusRepository.connect(url)
     }
 
     @ExperimentalCoroutinesApi

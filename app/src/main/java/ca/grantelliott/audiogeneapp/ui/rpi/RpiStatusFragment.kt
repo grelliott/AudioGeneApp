@@ -1,5 +1,6 @@
 package ca.grantelliott.audiogeneapp.ui.rpi
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import ca.grantelliott.audiogeneapp.R
 import ca.grantelliott.audiogeneapp.data.rpi.api.ConnectionState
 import ca.grantelliott.audiogeneapp.data.rpi.api.RunningState
@@ -16,8 +18,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import timber.log.Timber
 
-class RpiStatusFragment : Fragment() {
+class RpiStatusFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val viewModel: RpiStatusViewModel by viewModels()
+    private lateinit var sharedPrefs: SharedPreferences
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this)
+        viewModel.updateDataSource(sharedPrefs.getString("rpi_ip_address", "")!!)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,5 +87,17 @@ class RpiStatusFragment : Fragment() {
     override fun onDestroy() {
         Timber.d("+onDestroy")
         super.onDestroy()
+        sharedPrefs.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
+        if (prefs != null) {
+            Timber.d("Shared preference changed. Key = $key")
+            if (key == "rpi_ip_address") {
+                val dataSourceUri = prefs.getString(key, "")!!
+                Timber.d("Setting data source to $dataSourceUri")
+                viewModel.updateDataSource(dataSourceUri)
+            }
+        }
     }
 }

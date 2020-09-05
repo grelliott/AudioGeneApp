@@ -3,6 +3,8 @@
     <string name="title_home">Home</string>
     <string name="title_genetics">Genetics</string>
     <string name="title_supercollider">SuperCollider</string>
+
+    <!-- Connection States -->
     <string name="status_unknown">Unknown</string>
     <string name="disconnected">Disconnected</string>
     <string name="connecting">Connecting</string>
@@ -11,4 +13,9 @@
     <string name="error">Error</string>
     <string name="failure">Failure</string>
     <string name="cpu_freq_unknown">-</string>
+
+    <!-- Preferences -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="connection">Connection</string>
+    <string name="rpi_ip_address">Raspberry Pi Address</string>
 </resources>

@@ -25,19 +25,19 @@ class RpiStatusRepository @Inject constructor() {
         Timber.d("+observeStatus")
         return wsListener.observeStatus()
     }
+
     @ExperimentalCoroutinesApi
     fun observeConnectionStatus() :StateFlow<ConnectionState> {
         return wsListener.observeConnectionState()
     }
 
-    fun connect() {
-        Timber.d("+connect")
+    fun connect(url: String) {
+        Timber.d("+connect url = $url")
         httpClient = OkHttpClient.Builder()
-            .readTimeout(0,TimeUnit.SECONDS)
-            .connectTimeout(0, TimeUnit.SECONDS)
+            .connectTimeout(3, TimeUnit.SECONDS)
             .build()
         request = Request.Builder()
-            .url(Companion.RPI_URL)
+            .url(url)
             .build()
         wsListener = RpiWebSocketListener()
         webSocket = httpClient.newWebSocket(request, wsListener)
@@ -47,8 +47,8 @@ class RpiStatusRepository @Inject constructor() {
         Timber.d("+disconnect")
         webSocket.close(1001, "Closed")
     }
-
-    companion object {
-        private const val RPI_URL: String = "ws://192.168.1.29:5000/status"
-    }
+//
+//    companion object {
+//        private const val RPI_URL: String = "ws://192.168.1.29:5000/status"
+//    }
 }
