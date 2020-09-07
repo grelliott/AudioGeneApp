@@ -13,20 +13,23 @@ import ca.grantelliott.audiogeneapp.R
 import ca.grantelliott.audiogeneapp.data.rpi.api.ConnectionState
 import ca.grantelliott.audiogeneapp.data.rpi.api.RunningState
 import ca.grantelliott.audiogeneapp.ui.components.GaugeComponent
+import ca.grantelliott.audiogeneapp.ui.supercollider.SuperColliderViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import timber.log.Timber
 
 class RpiStatusFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+    //TODO get viewmodel by DI and provide it SharedPreferences
     private val viewModel: RpiStatusViewModel by viewModels()
+
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         sharedPrefs.registerOnSharedPreferenceChangeListener(this)
-        viewModel.updateDataSource(sharedPrefs.getString("rpi_ip_address", "")!!)
+        viewModel.updateDataSource(sharedPrefs.getString("rpi_ip_address", "ws://192.168.1.29:5000/status")!!)
     }
 
     override fun onCreateView(
@@ -44,6 +47,7 @@ class RpiStatusFragment : Fragment(), SharedPreferences.OnSharedPreferenceChange
         Timber.d("+onViewCreated")
         super.onViewCreated(view, savedInstanceState)
 
+        //TODO move to MainActivity
         val navItem = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         val homeBadge = navItem?.getOrCreateBadge(R.id.navigation_home)
         val geneticsBadge = navItem?.getOrCreateBadge(R.id.navigation_genetics)
@@ -81,7 +85,7 @@ class RpiStatusFragment : Fragment(), SharedPreferences.OnSharedPreferenceChange
                     navItem?.getOrCreateBadge(R.id.navigation_supercollider)?.backgroundColor = activity?.getColor(R.color.colorGaugeCritical)!!
                 }
             })
-        }
+        }  // end lifecycle
     }
 
     override fun onDestroy() {

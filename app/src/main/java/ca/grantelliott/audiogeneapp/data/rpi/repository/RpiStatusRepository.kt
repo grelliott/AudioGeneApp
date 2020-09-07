@@ -15,9 +15,12 @@ import javax.inject.Singleton
 
 @Singleton
 class RpiStatusRepository @Inject constructor() {
+    private var httpClient: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(3, TimeUnit.SECONDS)
+        .build()
+    private var wsListener: RpiWebSocketListener = RpiWebSocketListener()
+
     private lateinit var request: Request
-    private lateinit var httpClient: OkHttpClient
-    private lateinit var wsListener: RpiWebSocketListener
     private lateinit var webSocket: WebSocket
 
     @ExperimentalCoroutinesApi
@@ -33,13 +36,9 @@ class RpiStatusRepository @Inject constructor() {
 
     fun connect(url: String) {
         Timber.d("+connect url = $url")
-        httpClient = OkHttpClient.Builder()
-            .connectTimeout(3, TimeUnit.SECONDS)
-            .build()
         request = Request.Builder()
             .url(url)
             .build()
-        wsListener = RpiWebSocketListener()
         webSocket = httpClient.newWebSocket(request, wsListener)
     }
 
@@ -47,8 +46,4 @@ class RpiStatusRepository @Inject constructor() {
         Timber.d("+disconnect")
         webSocket.close(1001, "Closed")
     }
-//
-//    companion object {
-//        private const val RPI_URL: String = "ws://192.168.1.29:5000/status"
-//    }
 }
