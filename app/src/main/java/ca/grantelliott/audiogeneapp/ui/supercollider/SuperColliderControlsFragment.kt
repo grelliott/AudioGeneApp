@@ -23,6 +23,7 @@ class SuperColliderControlsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //TODO change to vertical slider
         val gainSlider: Slider = view.findViewById(R.id.volume_slider)
         gainSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
@@ -35,5 +36,8 @@ class SuperColliderControlsFragment : Fragment() {
                 }
             }
         })
+
+        //TODO add equalizer
+        //TODO add cutoffs
     }
 }

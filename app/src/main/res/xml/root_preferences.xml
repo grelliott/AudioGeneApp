@@ -6,7 +6,7 @@
             app:key="rpi_ip_address"
             app:title="@string/rpi_ip_address"
             app:useSimpleSummaryProvider="true"
-            app:defaultValue="ws://192.168.1.29:5000/status" />
+            app:defaultValue="192.168.1.29" />
 
     </PreferenceCategory>
 

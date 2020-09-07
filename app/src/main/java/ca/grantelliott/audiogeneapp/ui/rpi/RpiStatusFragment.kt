@@ -29,7 +29,7 @@ class RpiStatusFragment : Fragment(), SharedPreferences.OnSharedPreferenceChange
         super.onCreate(savedInstanceState)
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         sharedPrefs.registerOnSharedPreferenceChangeListener(this)
-        viewModel.updateDataSource(sharedPrefs.getString("rpi_ip_address", "ws://192.168.1.29:5000/status")!!)
+        viewModel.updateDataSource(sharedPrefs.getString("rpi_ip_address", "192.168.1.29")!!)
     }
 
     override fun onCreateView(

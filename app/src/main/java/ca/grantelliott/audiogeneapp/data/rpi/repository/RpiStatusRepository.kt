@@ -34,10 +34,10 @@ class RpiStatusRepository @Inject constructor() {
         return wsListener.observeConnectionState()
     }
 
-    fun connect(url: String) {
-        Timber.d("+connect url = $url")
+    fun connect(ipAddress: String) {
+        Timber.d("+connect IP address = $ipAddress")
         request = Request.Builder()
-            .url(url)
+            .url("ws://$ipAddress:5000/status")
             .build()
         webSocket = httpClient.newWebSocket(request, wsListener)
     }

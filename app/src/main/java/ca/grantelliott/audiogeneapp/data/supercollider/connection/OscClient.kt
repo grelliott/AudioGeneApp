@@ -26,7 +26,7 @@ class OscClient: OSCPacketListener, AudioControls {
         sender.connect()
         //TODO send a subscribe message to start getting updates
         // might need to pass in port
-        sender.send(OSCMessage("/subscribe"))
+        sender.send(OSCMessage("/subscribe", listOf(0)))
     }
 
     fun disconnect() {
