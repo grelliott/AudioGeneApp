@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 
 class SuperColliderRepository {
-    private var oscClient: OscClient = OscClient()
+    private var oscClient = OscClient()
 
     suspend fun connectClient() {
         withContext(Dispatchers.IO) {
